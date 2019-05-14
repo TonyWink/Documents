@@ -1,0 +1,72 @@
+1.请描述一下ArrayList的工作原理
+ArrayList是基于数组实现的，默认的初始容量是10，当元素不断增多时会触发扩容操作，默认是扩大1.5倍的数组容量，
+但是如果容量任然不够，扩充到所需要的数组容量大小，ArrayList在移除元素的时候，被移除索引后的元素位置都要前移一位，
+在新增和删除时，都设计到索引的变换，因此新增和删除操作，ArrayList的效率较低。而修改和查询只需要获取相应索引位置的
+元素即可，因此效率较高。
+
+2.解释一下ArrayList的RandomAccess的作用
+RandomAccess是一个标记接口，在Collections类中有一个方法叫binarySearch()，其作用是返回集合中指定元素在集合中的索引
+位置，它主要是通过二分法来查找元素，使用的前提是集合元素是有序的，在查找元素的时候根据是否实现RandomAccess来确定
+查找元素是使用迭代器方式还是使用for循环的方式，实现了RandomAccess则使用for循环的方式否则使用迭代器方式。比如说
+ArrayList使用for循环的方式更快，而LinkedList使用迭代器的方式更快，因此ArrayList实现了RandomAccess，而LinkedList没
+有实现。
+
+3.解释一下LinkedList的工作原理
+LinkedList是基于双向链表的方式实现的，新增元素时，新增一个节点，将尾部的元素Next指向该节点即可，删除节点时只需要
+更改节点的指向，将要删除节点的前置节点next直接指向后置节点并且置NULL，LinkedList的新增和删除操作只需要更改链表的
+节点指向，因此效率较高。LinkedList在遍历的时候都需要从头部节点开始遍历，通过指针逐一向下查找，因此效率较低，查询
+和修改都需要遍历元素因此效率较低。LinkedList必须使用迭代器遍历，原因是LinkedList迭代器方式时间复杂度
+是O(N)，根据迭代器next查找即可，for循环方式是O(N^2)。
+
+4.ArrayList和LinkedList的区别
+实现不同:ArrayList是基于数组实现的，LinkedList是基于双向链表实现的。
+效率不同:ArrayList增删的效率较高，查询修改效率较高。LinkedList查询修改的效率较低，增删的效率较高。
+拓展（ArrayList和LinkedList的实现原理）
+
+5.解释一下HashMap的实现原理
+HashMap是基于Hash表实现的，哈希表相当于数组和链表的组合，新增一个元素的过程中，先计算出Int类型的Hash值，
+再根据Hash值对当前容量求余计算当前元素在数组上的索引位置，当多个元素在同一个索引位置的时候，会发生碰撞，HashMap
+解决碰撞的方法是链地址法，元素会形成一个链表，在JDK1.8之后，当同一位置的冲突数超过8个的时候，会替换为红黑树。
+HashMap的默认负载因子是0.75，当数组容量达到75%时会进行扩容操作，变成原来的2倍大小，原哈希表中的所有元素都会重新计算hash值到新hash表，
+这时候其内部的排列顺序就会发生改变，因此HashMap内部是不保证有序的。
+
+6.为什么HashMap是线程不安全的
+  >put头结点丢失
+  >hashMap [7,A] [3,B] 如何进入死循环
+  
+  
+
+在多线程的情况下，两个线程如果同时触发HashMap的扩容操作，可能会造成双向链表构成闭环，在获取元素的时候会造成死循环。
+造成闭环的原因如下:
+两个线程同时进行扩容操作
+线程一:在数组某索引位置，存在链表A->B
+线程一挂起。
+线程二:遍历A,B元素重新Hash到新HashMap的索引位置此时变成了B->A
+构成环形链表.
+
+7.HashMap的大小为什么必须是2^n次幂
+与运算
+1，11，111，1111，1111
+1，3，7，15
+出现0的话，会导致该位置永远为0,浪费其中的部分空间
+
+8.HashMap和HashTable的区别
+线程安全,父类，弃用，HashTable禁止NULL值出现，遍历方式，扩容方式 HashTable 11  2n+1
+
+9.LinkedHashMap和HashMap的区别
+和标准原理一起说即可
+
+10.ConcurrentHashMap如何保证线程安全
+    >ConcurrentHashMap不允许为NULL
+    >1.7分段锁的思想-单独对 Segment 进行扩容,Segments定长.tryLock()自旋锁，size方法的原理以及这样做的原因
+	>1.8 node+CAS+synchronized 
+	     hash进入node，未初始化就进行初始化
+ 		 CAS_tableAt()添加头部节点
+		 synchronized 执行添加操作
+		 到达8替换为红黑树
+		 相对而言并发效率进一步提升
+
+
+
+
+

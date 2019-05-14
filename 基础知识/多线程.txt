@@ -1,0 +1,56 @@
+~创建线程的三种方式。
+  >定义Thread类的子类，重写run方法，调用start()开启一个新线程.
+  >实现Runable接口，重写run方法，新建Runable的实例作为Thread的target，调用start()开启一个新线程.
+  >实现Callable接口，重写call方法，call方法有返回值，新建FutureTask封装Callable的实例，FutureTask作为Thread的target运行.
+  
+  比较:
+       第一种方式受JAVA单继承的语言的限制，拓展性比较差无法实现多继承，但是实现简单。
+	   第二种方式可以实现多个Thread子类共享一个Runable对象，实现变量共享，获取当前线程使用Thread.currentThread.经典的买票例子。
+	   第三种方式执行体有返回值，并且是异步执行的一个计算过程十分耗时，立马返回一个Future可以获得执行状态，还可以取消执行中的任务，经典的炒菜例子。
+
+~什么是线程安全
+  >无论是单线程还是多线程的情况下程序的运行结果不会改变，并且相关变量的值和预期的一致，就是线程安全的.
+  
+~Runable和Callable的区别
+  >Callable方法有返回值，并且可以抛出异常
+  >Callable执行后会立即返回值，并且可以获知执行状态
+  >Runable java1.1就有了，Callable java5才加上
+  
+~wait方法和sleep方法的区别
+ >wait是Object里面的方法用于线程通信，sleep是Thread类里面的方法，用于线程等待。
+ >wait必须在同步代码块中才能使用,因为wait代表释放锁，进入等待队列
+ >wait被唤醒之后进入阻塞态进行锁竞争才能进入运行态，sleep直接进入运行态
+ 
+~synchronized、Lock、ReentrantLock、ReadWriteLock
+ >synchronized JVM实现的一种锁用于同步方法和代码块，执行完后自动释放锁该关键字可以应用于代码块，方法，静态方法，
+               被修饰的代码块每次只能一个线程访问该代码块，其它线程会处于阻塞状态.
+ >Lock是一个接口 提供获取锁，释放锁，获取锁，并且可以中断等待锁的阻塞状态
+ >ReentrantLock 是唯一实现Lock接口的实现类，需要显式的声明加锁和释放锁，正确的用法是放在try...catch...finally
+  语句块中
+ >ReadWriteLock 读写锁主要解决文件读写的时候面临的相关问题。
+
+~介绍一下CAS无锁技术
+ >CAS的思想是基于三个变量当前值，旧的预期值，要修改的值，当且仅当当前值==旧的预期值的时候将变量赋予新值，如果
+  不同的话就代表其它线程已经修改了变量值，尝试重新读取预期值直到当前变量的值和预期值相同为止.
+  java中的CAS是基于unSafe包中方法 compareAndSwap 这个是一个native方法是直接基于操作系统底层方法实现的，是操作系统
+  的原语，CAS是CPU的一种原子操作
+  CAS的ABA解决方案:ABA问题就是 值被改动过但是和原值一致，无法感知已经被改动过了，利用带有时间戳的对象引用，只有
+  时间戳和值都符合预期才会进行改动.
+  
+~volatile关键字的作用和原理
+ >被volatile修饰的关键字可以保持对其它线程的可见性并且禁止指令重排序，禁止指令重排序参见经典的单例模式
+   
+~ThreadLocal的原理
+ >ThreadLocal为每一个线程维护一个变量副本，每个线程可以独立的获取和使用里面的值而不会造成线程安全问题，每个线程会持有一个
+ ThreadLocalMap，ThreadLocalMap没有实现Map接口，entry是一个弱引用类型，key是ThreadLocal对象的引用，Value是存的值
+ 内存泄漏问题
+ 
+ 
+~线程池的4种创建方式与ThreadPoolExecutor的实现原理（线程池可以综合为一块来谈）以及配置的常见参数
+ >newfixedThreadPool 固定大小的线程，所有线程都是核心线程
+ >newCache..
+ >newSchedule
+ >newSingle
+  
+~Semaphore 信号量
+  

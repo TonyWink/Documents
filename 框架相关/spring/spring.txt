@@ -1,0 +1,21 @@
+1.spring IOC
+  控制反转  解耦 降低了代码量和编码强度
+  
+2.spring AOP
+  横切的概念  前置 后置  环绕     日志，权限控制
+
+3.spring 事务处理
+  >spring不提供事务的具体实现，而是交给具体的ORM框架去处理 提供了一个platformTransationManager 平台事务管理器
+   提供了5种事务的实现  ibatis hiber  JPA JDO JTA 
+    >指定数据库隔离级别
+	>指定数据库的事务传播方式  
+  >声明式事务(三种方式  基于代理工厂  基于XML（配合AOP 指定哪里扫描事务配置 通过tx:method 正则匹配某些方法进行指定） 基于注解)
+  
+4.spring注入方式 3种
+ 
+5.spring 设计模式 
+
+
+6.springMVC 工作流程
+
+
